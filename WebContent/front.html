@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	//alert("computed ");
+	$.ajax({
+		
+    type: "GET",
+    url: "http://localhost:8080/newweb/rest/search",
+    success: function()
+        {
+    	document.getElementById("label").hidden= true;
+       document.getElementById("search").disabled=false;
+       document.getElementById("btn").disabled=false;
+       
+       //$(#btn).show();
+        },
+    failure: function()
+    {
+    	alert("failure");
+    }
+    });
+});
+$(document).ready(function(){
+	 
+	$("#search").on("click",function()
+   {
+		$.ajax({
+            type: "GET",
+            url: "http://localhost:8080/newweb/rest/search/"+$('input[type="radio"]:checked').val()+"/"+$("#searchbox").val(),     
+            contentType: "application/json",
+            dataType: "json",
+            success: function(response)
+                {
+            	
+              document.getElementById("content").innerHTML="";
+            	var res = response;
+            	if($('input[type="radio"]:checked').val()=="cluster")
+            		{
+            		 document.getElementById("content").innerHTML += "<br/>";
+            		 document.getElementById("content").innerHTML += "Cluster 1 documents are";
+            		 document.getElementById("content").innerHTML += "<br/>";
+            		 document.getElementById("content").innerHTML += res.c1+" ";
+            		 document.getElementById("content").innerHTML += "<br/>";
+            		 document.getElementById("content").innerHTML += "Cluster 2 documents are";
+            		 document.getElementById("content").innerHTML += res.c2;
+            		 document.getElementById("content").innerHTML += "<br/>";
+            		 document.getElementById("content").innerHTML += "Cluster 2 documents are";
+            		 document.getElementById("content").innerHTML += res.c3;
+            		}
+            	else
+            		{
+               for (var i=0;i<res.Url.length&&i<=10;i++)
+               { 
+             document.getElementById("content").innerHTML += "<br/>";
+            document.getElementById("content").innerHTML += "<a href>"+res.Url[i]+"</a>";
+            document.getElementById("content").innerHTML += "<br/>";
+            document.getElementById("content").innerHTML += res.snippet[i];
+           
+               }}
+               if($('input[type="radio"]:checked').val()=="Auth")
+        	   {
+            	   document.getElementById("content").innerHTML +="Top 10 hubs are:-"+"<br/>";
+            	   for (var i=0;i<res.Url2.length&&i<=10;i++)
+            		   
+        			document.getElementById("content").innerHTML += res.Url2[i]+"<br/>";
+            	   document.getElementById("content").innerHTML += "<br/>";
+                   document.getElementById("content").innerHTML += "<br/>";
+        	   }
+               },
+            failure: function()
+            {
+            	alert("failure");
+            }
+            });
+    	  });
+});
+</script>
+<link href=style.css rel=stylesheet>
+<body id="body"
+	style="background-image: url(''); background-size: 1280px 960px">
+
+	<div class=mainHeader>
+
+		<nav>
+			<ul>
+				<li><input type="radio" name="rank" value="Idf">IDF</li>
+				<li><input type="radio" name="rank" value="Auth">Authority/Hubs</li>
+				<li><input type="radio" name="rank" value="pagerank">Pagerank</li>
+				<li><input type="radio" name="rank" value="cluster">Clustering</li>
+				
+			</ul>
+		</nav>
+	</div>
+	<div class=mainContent>
+	<label id="label" style="text-align:center;">precomputing.........</label>
+		<div class=topcontent>
+		
+			<input type=text id=searchbox /> <span> <input type="image"
+				src="images/SearchSign.bmp" id="search" disabled="disabled" /></span>
+		</div>
+		<br>
+<div id="content">
+		</div>
+		<div class=top-sidebar>
+		
+		</div>
+	</div>
+	<div class=bottomcontent>
+	
+		
+	</div>
+
+	<div class=middle-sidebar></div>
+	<div class=bottom-sidebar></div>
+
+
+</body>
+
+
+</html>
